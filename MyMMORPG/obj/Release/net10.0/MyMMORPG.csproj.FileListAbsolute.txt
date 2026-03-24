@@ -1,0 +1,14 @@
+c:\Users\HP\c#\test\MyMMORPG\bin\Release\net10.0\MyMMORPG.exe
+c:\Users\HP\c#\test\MyMMORPG\bin\Release\net10.0\MyMMORPG.deps.json
+c:\Users\HP\c#\test\MyMMORPG\bin\Release\net10.0\MyMMORPG.runtimeconfig.json
+c:\Users\HP\c#\test\MyMMORPG\bin\Release\net10.0\MyMMORPG.dll
+c:\Users\HP\c#\test\MyMMORPG\bin\Release\net10.0\MyMMORPG.pdb
+c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\MyMMORPG.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\MyMMORPG.AssemblyInfoInputs.cache
+c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\MyMMORPG.AssemblyInfo.cs
+c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\MyMMORPG.csproj.CoreCompileInputs.cache
+c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\MyMMORPG.dll
+c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\refint\MyMMORPG.dll
+c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\MyMMORPG.pdb
+c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\MyMMORPG.genruntimeconfig.cache
+c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\ref\MyMMORPG.dll

@@ -1,0 +1,5 @@
+c:\Users\HP\c#\test\MyMMORPG\bin\Release\net10.0\publish\MyMMORPG.exe
+c:\Users\HP\c#\test\MyMMORPG\bin\Release\net10.0\publish\MyMMORPG.dll
+c:\Users\HP\c#\test\MyMMORPG\bin\Release\net10.0\publish\MyMMORPG.deps.json
+c:\Users\HP\c#\test\MyMMORPG\bin\Release\net10.0\publish\MyMMORPG.runtimeconfig.json
+c:\Users\HP\c#\test\MyMMORPG\bin\Release\net10.0\publish\MyMMORPG.pdb

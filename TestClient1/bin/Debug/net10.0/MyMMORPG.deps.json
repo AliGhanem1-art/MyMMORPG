@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "MyMMORPG/1.0.0": {
+        "runtime": {
+          "MyMMORPG.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "MyMMORPG/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
