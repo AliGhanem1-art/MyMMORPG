@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\HP\\c#\\test\\MyMMORPG\\MyMMORPG.csproj": {}
+    "C:\\Users\\HP\\c#\\test\\MyMMORPG\\MyMMORPG.csproj": {}
   },
   "projects": {
-    "c:\\Users\\HP\\c#\\test\\MyMMORPG\\MyMMORPG.csproj": {
+    "C:\\Users\\HP\\c#\\test\\MyMMORPG\\MyMMORPG.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\HP\\c#\\test\\MyMMORPG\\MyMMORPG.csproj",
+        "projectUniqueName": "C:\\Users\\HP\\c#\\test\\MyMMORPG\\MyMMORPG.csproj",
         "projectName": "MyMMORPG",
-        "projectPath": "c:\\Users\\HP\\c#\\test\\MyMMORPG\\MyMMORPG.csproj",
+        "projectPath": "C:\\Users\\HP\\c#\\test\\MyMMORPG\\MyMMORPG.csproj",
         "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\HP\\c#\\test\\MyMMORPG\\obj\\",
+        "outputPath": "C:\\Users\\HP\\c#\\test\\MyMMORPG\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config"
