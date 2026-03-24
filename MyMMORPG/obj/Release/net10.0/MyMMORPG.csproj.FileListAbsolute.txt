@@ -12,3 +12,4 @@ c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\refint\MyMMORPG.dll
 c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\MyMMORPG.pdb
 c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\MyMMORPG.genruntimeconfig.cache
 c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\ref\MyMMORPG.dll
+c:\Users\HP\c#\test\MyMMORPG\obj\Release\net10.0\MyMMORPG.sourcelink.json
