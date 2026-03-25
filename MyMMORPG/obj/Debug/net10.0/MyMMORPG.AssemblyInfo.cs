@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MyMMORPG")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+15fd456515ebb2b040593622371885693d2d65b9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d5f861b611233d4055ec8b7dba6296d0c1d7a160")]
 [assembly: System.Reflection.AssemblyProductAttribute("MyMMORPG")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MyMMORPG")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
