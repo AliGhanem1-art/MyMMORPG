@@ -179,7 +179,7 @@ namespace MyMMORPG.Server.Core
             IsConnected = false;
             _stream.Close();
             _tcpClient.Close();
-            _server.RemoveSession(PlayerId); // ← ضيف ده
+            _= _server.RemoveSession(PlayerId); // ← ضيف ده
             Console.WriteLine($"🔴 Player {PlayerId} disconnected");
         }
 

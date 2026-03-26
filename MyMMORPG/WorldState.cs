@@ -39,17 +39,24 @@ namespace MyMMORPG
         // ⑤ Validate الحركة — هل اللاعب بيغش؟
         public bool IsValidMove(PlayerData player, float newX, float newY)
         {
+            // احسب الوقت اللي فات من آخر حركة
+           double secondsElapsed =
+            (DateTime.UtcNow - player.LastMoveTime).TotalSeconds;
+
+            // لو أول حركة — اقبلها على طول
+            if (secondsElapsed < 0.01)
+            {
+                Console.WriteLine($"⚠️ Player {player.Id} moving too fast — throttled");
+                return false;
+            }
+
             // احسب المسافة بين المكان القديم والجديد
             float dx = Math.Abs(newX - player.LastX);
-            float dy = Math.Abs(newY - player.LastY);
+            float dy = Math.Abs(player.LastY);
             float distance = MathF.Sqrt(dx * dx + dy * dy);
 
-            // احسب الوقت اللي فات من آخر حركة
-            double secondsElapsed = 
-                (DateTime.UtcNow - player.LastMoveTime).TotalSeconds;
-
             // أقصى سرعة = 200 وحدة في الثانية
-            float maxSpeed    = 200f;
+            float maxSpeed    = 1000f;
             float maxDistance = maxSpeed * (float)secondsElapsed;
 
             if (distance > maxDistance + 10f) // +10 هامش خطأ بسيط
