@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\HP\\c#\\test\\MyMMORPG\\MyMMORPG.csproj": {}
+    "C:\\Users\\kaboa\\test\\MyMMORPG\\MyMMORPG\\MyMMORPG.csproj": {}
   },
   "projects": {
-    "C:\\Users\\HP\\c#\\test\\MyMMORPG\\MyMMORPG.csproj": {
+    "C:\\Users\\kaboa\\test\\MyMMORPG\\MyMMORPG\\MyMMORPG.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HP\\c#\\test\\MyMMORPG\\MyMMORPG.csproj",
+        "projectUniqueName": "C:\\Users\\kaboa\\test\\MyMMORPG\\MyMMORPG\\MyMMORPG.csproj",
         "projectName": "MyMMORPG",
-        "projectPath": "C:\\Users\\HP\\c#\\test\\MyMMORPG\\MyMMORPG.csproj",
-        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HP\\c#\\test\\MyMMORPG\\obj\\",
+        "projectPath": "C:\\Users\\kaboa\\test\\MyMMORPG\\MyMMORPG\\MyMMORPG.csproj",
+        "packagesPath": "C:\\Users\\kaboa\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\kaboa\\test\\MyMMORPG\\MyMMORPG\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\kaboa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
