@@ -18,25 +18,25 @@ namespace MyMMORPG.Server.Core
         private readonly TcpClient   _tcpClient;
         private readonly NetworkStream _stream;
 
-        private readonly GameServer _server;
+        // في ClientSession.cs — عدّل الـ Constructor
+        private readonly GameServer _server; // ضيف ده
 
         // ③ buffer بنقرأ فيه الداتا الجاية
         // 1024 byte كافية لأي packet عادية
         private readonly byte[] _receiveBuffer = new byte[1024];
 
         // ④ Constructor — بيتنادى لما لاعب يتصل
-        public ClientSession(TcpClient client, int playerId , GameServer server)
+        public ClientSession(TcpClient client, int playerId, GameServer server)
         {
-            _tcpClient = client;
-            _stream    = client.GetStream(); // ← القناة اللي هنتكلم بيها
-            PlayerId   = playerId;
-            _server    = server;
-
+            _tcpClient  = client;
+            _stream     = client.GetStream();
+            PlayerId    = playerId;
+            _server     = server;          // ← ضيف ده
             IsConnected = true;
 
             Console.WriteLine($"✅ Player {PlayerId} connected from " +
-                              $"{client.Client.RemoteEndPoint}");
-        }
+                            $"{client.Client.RemoteEndPoint}");
+        }   
 
         // ⑤ بدأ الاستماع — بيشتغل في background
         public async Task StartListeningAsync()
@@ -66,7 +66,7 @@ namespace MyMMORPG.Server.Core
                     await ReadExactAsync(payload, packetSize);
 
                     // ④ معالجة الـ packet
-                    OnPacketReceived((PacketType)packetType, payload);
+                  await OnPacketReceived((PacketType)packetType, payload);
                 }
             }
             catch (Exception ex)
@@ -123,7 +123,7 @@ namespace MyMMORPG.Server.Core
             switch(type)
             {
                 case PacketType.Move:
-               await HandleMove(reader);
+                HandleMove(reader);
                 break;
                 case PacketType.Chat:
                 HandleChat(reader);
@@ -132,39 +132,37 @@ namespace MyMMORPG.Server.Core
             }
         }
 
-        private async Task HandleMove(PacketReader reader)
+        // عدّل HandleMove
+    private async void HandleMove(PacketReader reader)
+    {
+        float newX = reader.ReadFloat();
+        float newY = reader.ReadFloat();
+
+        var player = _server.World.GetPlayer(PlayerId);
+        if (player == null) return;
+
+        // ① Validate الحركة
+        if (!_server.World.IsValidMove(player, newX, newY))
         {
-            // اقرأ الإحداثيات من الـ packet
-            float newX = reader.ReadFloat();
-            float newY = reader.ReadFloat();
-            
-            var playerData = _server.World.GetPlayer(PlayerId);
-            if(playerData == null) return;
+            // ارجعله مكانه الصح
+            var rejectPacket = new PacketWriter(PacketType.Update);
+            rejectPacket.Write(PlayerId);
+            rejectPacket.Write(player.X);
+            rejectPacket.Write(player.Y);
+            await SendAsync(rejectPacket.Build());
+            return;
+        }
 
-            if(!_server.World.IsValidMove(playerData,newX , newY))
-            {
-                var RejectPacket = new PacketWriter(PacketType.Update);
-                RejectPacket.Write(PlayerId);
-                RejectPacket.Write(X);
-                RejectPacket.Write(Y);
-                await SendAsync(RejectPacket.Build());
-                Console.WriteLine($"⚠️ Player {PlayerId} sent invalid move. " +
-                                  $"Rejecting and resetting position.");
-                                  return;
-            }
+        // ② حدّث الـ World State
+        _server.World.UpdatePlayerPosition(PlayerId, newX, newY);
+        Console.WriteLine($"🏃 Player {PlayerId} moved to X={newX} Y={newY}");
 
-            _server.World.UpdatePlayerPosition(PlayerId, newX, newY);
-
-            var upadtePacket = new PacketWriter(PacketType.Update);
-            upadtePacket.Write(PlayerId);
-            upadtePacket.Write(newX);
-            upadtePacket.Write(newY);
-
-            await _server.BroadCastAsync(upadtePacket.Build(),PlayerId);
-
-            Console.WriteLine($"🏃 Player {PlayerId} moved to X={newX} Y={newY}");
-
-            // حدّث موقع اللاعب
+        // ③ Broadcast للاعبين التانيين
+        var updatePacket = new PacketWriter(PacketType.Update);
+        updatePacket.Write(PlayerId);
+        updatePacket.Write(newX);
+        updatePacket.Write(newY);
+        await _server.BroadcastAsync(updatePacket.Build(), excludePlayerId: PlayerId);
         }
 
 
@@ -174,15 +172,14 @@ namespace MyMMORPG.Server.Core
             Console.WriteLine($"💬 Player {PlayerId}: {message}");
         }
 
-        // ⑨ قطع الاتصال بشكل نضيف
+        // عدّل Disconnect
         public void Disconnect()
         {
             if (!IsConnected) return;
-
             IsConnected = false;
             _stream.Close();
             _tcpClient.Close();
-            _server.RemoveSession(PlayerId);
+            _server.RemoveSession(PlayerId); // ← ضيف ده
             Console.WriteLine($"🔴 Player {PlayerId} disconnected");
         }
 

@@ -1,4 +1,4 @@
-// Server/Core/GameServer.cs
+// MyMMORPG/GameServer.cs
 using System.Net;
 using System.Net.Sockets;
 
@@ -7,17 +7,15 @@ namespace MyMMORPG.Server.Core
     public class GameServer
     {
         private readonly TcpListener _listener;
-
-        // كل لاعب متصل موجود هنا
-        // ConcurrentDictionary آمن لو أكتر من thread بيكتب فيه
         private readonly Dictionary<int, ClientSession> _sessions = new();
 
-        public readonly WorldState World  = new();
-        private int _nextPlayerId = 1; // counter بسيط للـ IDs
+        // ① ضيف WorldState هنا
+        public readonly WorldState World = new();
+
+        private int _nextPlayerId = 1;
 
         public GameServer(int port)
         {
-            // استنى على كل الـ IP addresses على الجهاز
             _listener = new TcpListener(IPAddress.Any, port);
         }
 
@@ -27,49 +25,40 @@ namespace MyMMORPG.Server.Core
             Console.WriteLine("🎮 Server started on port 7171");
             Console.WriteLine("⏳ Waiting for players...\n");
 
-            // فضل تستنى لاعبين للأبد
             while (true)
             {
-                // ✅ الطريقة الأفضل - معالجة الأخطاء:
-                try
-                {
-                    TcpClient client = await _listener.AcceptTcpClientAsync();
-                    
-                    int id = _nextPlayerId++;
+                TcpClient client = await _listener.AcceptTcpClientAsync();
 
-                    ClientSession session = new ClientSession(client, id , this);
-                    _sessions[id] = session;
+                int id         = _nextPlayerId++;
+                var session    = new ClientSession(client, id, this);
+                _sessions[id]  = session;
 
-                    var player = new PlayerData{Id = id};
-                    World.AddPlayer(player);
-                    
-                    _ = session.StartListeningAsync();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"❌ خطأ في الاتصال: {ex.Message}");
-                    // لا نوجد session إذا فشل الاتصال
-                }
+                // ② ضيف اللاعب في الـ World
+                var playerData = new PlayerData { Id = id };
+                World.AddPlayer(playerData);
+
+                _ = session.StartListeningAsync();
             }
-
-            
         }
 
-        public async Task BroadCastAsync(byte[] data , int excladePlayerId)
+        // ③ Broadcast — ابعت packet لكل اللاعبين ما عدا واحد
+        public async Task BroadcastAsync(byte[] data, int excludePlayerId)
         {
-            foreach(var session in _sessions.Values)
+            foreach (var session in _sessions.Values)
             {
-                if(session.PlayerId == excladePlayerId) continue;
-                if(!session.IsConnected) continue;
+                if (session.PlayerId == excludePlayerId) continue;
+                if (!session.IsConnected) continue;
 
                 await session.SendAsync(data);
             }
         }
-        public void RemoveSession(int PlayerId)
+
+        // ④ لما لاعب يقطع
+        public void RemoveSession(int playerId)
         {
-            _sessions.Remove(PlayerId);
-            World.RemovePlayer(PlayerId);
-            System.Console.WriteLine($"Player {PlayerId} removed from sessions.");
+            _sessions.Remove(playerId);
+            World.RemovePlayer(playerId);
+            Console.WriteLine($"Player {playerId} removed from sessions.");
         }
     }
 }

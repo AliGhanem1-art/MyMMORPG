@@ -3,63 +3,75 @@ namespace MyMMORPG
 {
     public class WorldState
     {
-        
-        private readonly System.Collections.Concurrent.ConcurrentDictionary<int,PlayerData>
-        _Players = new ();
+        // Dictionary — كل لاعب ليه ID وبياناته
+        // ConcurrentDictionary آمن لو أكتر من thread بيكتب فيه
+        private readonly System.Collections.Concurrent.ConcurrentDictionary
+            <int, PlayerData> _players = new();
 
-
+        // ① ضيف لاعب جديد
         public void AddPlayer(PlayerData player)
         {
-            _Players[player.Id] = player;
+            _players[player.Id] = player;
+            Console.WriteLine($"🌍 World: Player {player.Id} added " +
+                              $"at X={player.X} Y={player.Y}");
         }
 
-        public void RemovePlayer(int playerid)
+        // ② شيل لاعب
+        public void RemovePlayer(int playerId)
         {
-            _Players.TryRemove(playerid,out _);
+            _players.TryRemove(playerId, out _);
+            Console.WriteLine($"🌍 World: Player {playerId} removed");
         }
 
-        public PlayerData? GetPlayer(int playerid)
+        // ③ جيب بيانات لاعب معين
+        public PlayerData? GetPlayer(int playerId)
         {
-            _Players.TryGetValue(playerid , out var player);
+            _players.TryGetValue(playerId, out var player);
             return player;
         }
 
-        public IEnumerable<PlayerData> GetOtherPlayers(int excludePlayerId)
+        // ④ جيب كل اللاعبين ما عدا واحد
+        public IEnumerable<PlayerData> GetOtherPlayers(int excludeId)
         {
-            return _Players.Values.Where(p => p.Id != excludePlayerId);
+            return _players.Values.Where(p => p.Id != excludeId);
         }
 
-        public bool IsValidMove(PlayerData player , float newX , float newY)
+        // ⑤ Validate الحركة — هل اللاعب بيغش؟
+        public bool IsValidMove(PlayerData player, float newX, float newY)
         {
-            float px = MathF.Abs(newX - player.LastX);
-            float py = MathF.Abs(newY - player.LastY);
+            // احسب المسافة بين المكان القديم والجديد
+            float dx = Math.Abs(newX - player.LastX);
+            float dy = Math.Abs(newY - player.LastY);
+            float distance = MathF.Sqrt(dx * dx + dy * dy);
 
-            float distance = MathF.Sqrt(px*px + py*py);
-
+            // احسب الوقت اللي فات من آخر حركة
             double secondsElapsed = 
-            (DateTime.UtcNow - player.LastMoveTime).TotalSeconds;
+                (DateTime.UtcNow - player.LastMoveTime).TotalSeconds;
 
-            float maxSpeed = 200f;
+            // أقصى سرعة = 200 وحدة في الثانية
+            float maxSpeed    = 200f;
             float maxDistance = maxSpeed * (float)secondsElapsed;
 
-            if(distance > maxDistance +10f)
+            if (distance > maxDistance + 10f) // +10 هامش خطأ بسيط
             {
+                Console.WriteLine($"⚠️ Player {player.Id} moving too fast! " +
+                                  $"distance={distance:F1} max={maxDistance:F1}");
                 return false;
             }
-            return true;
 
+            return true;
         }
 
-        public void UpdatePlayerPosition(int PlayerId , float newX , float newY)
+        // ⑥ حدّث مكان اللاعب
+        public void UpdatePlayerPosition(int playerId, float newX, float newY)
         {
-            var player = GetPlayer(PlayerId);
-            if(player ==null) return;
+            var player = GetPlayer(playerId);
+            if (player == null) return;
 
-            player.LastX = player.x;
-            player.LastY = player.y;
-
-            player.x = newX;
-            player.y = newY;
+            player.LastX        = player.X;
+            player.LastY        = player.Y;
+            player.X            = newX;
+            player.Y            = newY;
             player.LastMoveTime = DateTime.UtcNow;
         }
     }

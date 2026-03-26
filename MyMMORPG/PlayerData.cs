@@ -1,17 +1,18 @@
-
 // MyMMORPG/PlayerData.cs
 namespace MyMMORPG
 {
     public class PlayerData
     {
-        public int Id {get; set;}
-        public string name {get; set;} = "Player";
-        public float x {get; set;}
-        public float y {get; set;}
+        public int Id       { get; set; }
+        public string Name  { get; set; } = "Unknown";
+        public float X      { get; set; } = 100f;
+        public float Y      { get; set; } = 100f;
 
-        public DateTime LastMoveTime  {get; set;} = DateTime.UtcNow;
+        // آخر وقت اتحرك فيه — هنستخدمه للـ validate
+        public DateTime LastMoveTime { get; set; } = DateTime.UtcNow;
 
-        public float LastX   {get; set;} = 100f;
-        public float LastY   {get; set;} = 100f;
+        // آخر مكان كان فيه — للـ validate كمان
+        public float LastX  { get; set; } = 100f;
+        public float LastY  { get; set; } = 100f;
     }
 }
