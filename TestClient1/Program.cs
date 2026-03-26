@@ -15,13 +15,13 @@ NetworkStream stream = client.GetStream();
 Console.WriteLine("✅ Connected to server!");
 
 // ① ابعت حركة
-await ClientMove(stream, 120f, 500f);
-
+// بدل ما تبعت X=120 Y=500 دفعة واحدة
 await Task.Delay(500);
-
-// ② ابعت حركة تانية
-await ClientMove(stream, 100f, 200f);
-
+await ClientMove(stream, 110f, 110f); // خطوة صغيرة الأول
+await Task.Delay(500);
+await ClientMove(stream, 120f, 120f); // خطوة تانية
+await Task.Delay(500);
+await ClientMove(stream, 100f, 200f); // دلوقتي تقدر تتحرك أكتر
 await Task.Delay(500);
 
 // ③ ابعت chat

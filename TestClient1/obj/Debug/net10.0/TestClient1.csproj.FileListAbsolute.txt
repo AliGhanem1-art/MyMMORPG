@@ -19,3 +19,4 @@ C:\Users\HP\c#\test\TestClient1\obj\Debug\net10.0\refint\TestClient1.dll
 C:\Users\HP\c#\test\TestClient1\obj\Debug\net10.0\TestClient1.pdb
 C:\Users\HP\c#\test\TestClient1\obj\Debug\net10.0\TestClient1.genruntimeconfig.cache
 C:\Users\HP\c#\test\TestClient1\obj\Debug\net10.0\ref\TestClient1.dll
+C:\Users\HP\c#\test\TestClient1\obj\Debug\net10.0\TestClient1.sourcelink.json

@@ -12,6 +12,7 @@ namespace MyMMORPG.Server.Core
         // ConcurrentDictionary آمن لو أكتر من thread بيكتب فيه
         private readonly Dictionary<int, ClientSession> _sessions = new();
 
+        public readonly WorldState World  = new();
         private int _nextPlayerId = 1; // counter بسيط للـ IDs
 
         public GameServer(int port)
@@ -36,10 +37,11 @@ namespace MyMMORPG.Server.Core
                     
                     int id = _nextPlayerId++;
 
-                    ClientSession session = new ClientSession(client, id);
-                    session.OnDissconected += RemovePlayer;
-
+                    ClientSession session = new ClientSession(client, id , this);
                     _sessions[id] = session;
+
+                    var player = new PlayerData{Id = id};
+                    World.AddPlayer(player);
                     
                     _ = session.StartListeningAsync();
                 }
@@ -52,14 +54,22 @@ namespace MyMMORPG.Server.Core
 
             
         }
-        public void RemovePlayer(int PlayerId)
+
+        public async Task BroadCastAsync(byte[] data , int excladePlayerId)
+        {
+            foreach(var session in _sessions.Values)
             {
-                if (_sessions.ContainsKey(PlayerId))
-                {
-                    _sessions[PlayerId].Disconnect();
-                    _sessions.Remove(PlayerId);
-                    System.Console.WriteLine($"Player {PlayerId} removed from sessions.");
-                }   
+                if(session.PlayerId == excladePlayerId) continue;
+                if(!session.IsConnected) continue;
+
+                await session.SendAsync(data);
             }
+        }
+        public void RemoveSession(int PlayerId)
+        {
+            _sessions.Remove(PlayerId);
+            World.RemovePlayer(PlayerId);
+            System.Console.WriteLine($"Player {PlayerId} removed from sessions.");
+        }
     }
 }

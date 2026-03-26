@@ -8,7 +8,6 @@ namespace MyMMORPG.Server.Core
     public class ClientSession
     {
 
-        public Action<int>? OnDissconected;
         // ① معلومات اللاعب
         public int PlayerId { get; private set; }
         public float X { get; set; } = 100f;
@@ -19,16 +18,20 @@ namespace MyMMORPG.Server.Core
         private readonly TcpClient   _tcpClient;
         private readonly NetworkStream _stream;
 
+        private readonly GameServer _server;
+
         // ③ buffer بنقرأ فيه الداتا الجاية
         // 1024 byte كافية لأي packet عادية
         private readonly byte[] _receiveBuffer = new byte[1024];
 
         // ④ Constructor — بيتنادى لما لاعب يتصل
-        public ClientSession(TcpClient client, int playerId)
+        public ClientSession(TcpClient client, int playerId , GameServer server)
         {
             _tcpClient = client;
             _stream    = client.GetStream(); // ← القناة اللي هنتكلم بيها
             PlayerId   = playerId;
+            _server    = server;
+
             IsConnected = true;
 
             Console.WriteLine($"✅ Player {PlayerId} connected from " +
@@ -111,7 +114,7 @@ namespace MyMMORPG.Server.Core
         }
 
         // ⑧ هنكملها في الطبقة التالية
-        private void OnPacketReceived(PacketType type, byte[] payload)
+        private async Task OnPacketReceived(PacketType type, byte[] payload)
         {
             Console.WriteLine($"📦 Received {type} from Player {PlayerId}");
             // هنشرح المعالجة في طبقة ٣
@@ -120,7 +123,7 @@ namespace MyMMORPG.Server.Core
             switch(type)
             {
                 case PacketType.Move:
-                HandleMove(reader);
+               await HandleMove(reader);
                 break;
                 case PacketType.Chat:
                 HandleChat(reader);
@@ -129,17 +132,39 @@ namespace MyMMORPG.Server.Core
             }
         }
 
-        private void HandleMove(PacketReader reader)
+        private async Task HandleMove(PacketReader reader)
         {
             // اقرأ الإحداثيات من الـ packet
             float newX = reader.ReadFloat();
             float newY = reader.ReadFloat();
+            
+            var playerData = _server.World.GetPlayer(PlayerId);
+            if(playerData == null) return;
+
+            if(!_server.World.IsValidMove(playerData,newX , newY))
+            {
+                var RejectPacket = new PacketWriter(PacketType.Update);
+                RejectPacket.Write(PlayerId);
+                RejectPacket.Write(X);
+                RejectPacket.Write(Y);
+                await SendAsync(RejectPacket.Build());
+                Console.WriteLine($"⚠️ Player {PlayerId} sent invalid move. " +
+                                  $"Rejecting and resetting position.");
+                                  return;
+            }
+
+            _server.World.UpdatePlayerPosition(PlayerId, newX, newY);
+
+            var upadtePacket = new PacketWriter(PacketType.Update);
+            upadtePacket.Write(PlayerId);
+            upadtePacket.Write(newX);
+            upadtePacket.Write(newY);
+
+            await _server.BroadCastAsync(upadtePacket.Build(),PlayerId);
 
             Console.WriteLine($"🏃 Player {PlayerId} moved to X={newX} Y={newY}");
 
             // حدّث موقع اللاعب
-            X = newX;
-            Y = newY;
         }
 
 
@@ -153,11 +178,12 @@ namespace MyMMORPG.Server.Core
         public void Disconnect()
         {
             if (!IsConnected) return;
+
             IsConnected = false;
             _stream.Close();
             _tcpClient.Close();
+            _server.RemoveSession(PlayerId);
             Console.WriteLine($"🔴 Player {PlayerId} disconnected");
-            OnDissconected?.Invoke(PlayerId);
         }
 
 
